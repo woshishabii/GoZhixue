@@ -10,13 +10,11 @@ package api
 
 import (
 	"GoZhixue/conf"
-	"GoZhixue/model"
 	"GoZhixue/serializer"
 	"encoding/json"
 	"fmt"
-
 	"github.com/gin-gonic/gin"
-	validator "gopkg.in/go-playground/validator.v8"
+	"github.com/go-playground/validator/v10"
 )
 
 // Ping 状态检查页面
@@ -27,17 +25,6 @@ func Ping(c *gin.Context) {
 	})
 }
 
-// CurrentUser 获取当前用户
-func CurrentUser(c *gin.Context) *model.User {
-	if user, _ := c.Get("user"); user != nil {
-		if u, ok := user.(*model.User); ok {
-			return u
-		}
-	}
-	return nil
-}
-
-// ErrorResponse 返回错误消息
 func ErrorResponse(err error) serializer.Response {
 	if ve, ok := err.(validator.ValidationErrors); ok {
 		for _, e := range ve {

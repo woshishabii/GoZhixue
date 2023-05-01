@@ -9,7 +9,6 @@
 package conf
 
 import (
-	"GoZhixue/cache"
 	"GoZhixue/model"
 	"GoZhixue/util"
 	"github.com/joho/godotenv"
@@ -31,5 +30,4 @@ func Init() {
 
 	// 链接数据库
 	model.Database(os.Getenv("MYSQL_DSN"))
-	cache.Redis()
 }
