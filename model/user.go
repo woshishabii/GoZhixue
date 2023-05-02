@@ -13,8 +13,6 @@ type User struct {
 	Username string `json:"username"`
 	Password string `json:"password" gorm:"size=32"`
 	RealName string `json:"real_name" gorm:"not null"`
-	SchoolID uint
-	School   School `gorm:"foreignKey:SchoolID"`
 	ClassID  uint
 	Class    Class `gorm:"foreignKey:ClassID"`
 	Type     uint  `json:"type"`

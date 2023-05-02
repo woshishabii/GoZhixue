@@ -16,6 +16,6 @@ type Exam struct {
 	EndAt   time.Time
 	Content datatypes.JSON `json:"content"`
 	Answer  datatypes.JSON `json:"answer"`
-	Taker   []Class        `json:"taker"`
+	Takers  []Class        `json:"taker" gorm:"foreignKey:ExamID"`
 	UUID    uuid.UUID      `json:"uuid"`
 }

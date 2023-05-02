@@ -11,8 +11,9 @@ package server
 import (
 	"GoZhixue/api"
 	"GoZhixue/middleware"
-	"github.com/gin-gonic/gin"
 	"os"
+
+	"github.com/gin-gonic/gin"
 )
 
 func NewRouter() *gin.Engine {
@@ -33,6 +34,16 @@ func NewRouter() *gin.Engine {
 			user.POST("register", api.UserRegister)
 			user.POST("login", api.UserLogin)
 			user.POST("logout", api.UserLogout)
+		}
+
+		school := v1.Group("school")
+		{
+			school.GET("list", api.GetSchools)
+		}
+
+		class := v1.Group("class")
+		{
+			class.POST("list", api.GetClasses)
 		}
 	}
 

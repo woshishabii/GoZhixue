@@ -12,7 +12,7 @@ type UserRegisterService struct {
 	Username string `form:"username" json:"username" binding:"required,min=2,max=30"`
 	Password string `form:"password" json:"password" binding:"required,len=32"`
 	RealName string `form:"real_name" json:"real_name" binding:"required"`
-	SchoolID uint   `form:"school_id" json:"school_id" binding:"required"`
+	ClassID  uint   `form:"class_id" json:"class_id" binding:"required"`
 	Type     uint   `form:"type" json:"type" binding:"required"`
 }
 
@@ -26,7 +26,7 @@ func (service *UserRegisterService) Valid() *serializer.Response {
 	}
 
 	count = 0
-	if model.DB.Model(&model.School{}).Where("id = ?", service.SchoolID).Count(&count); count == 0 {
+	if model.DB.Model(&model.School{}).Where("id = ?", service.ClassID).Count(&count); count == 0 {
 		return &serializer.Response{
 			Code: 40002,
 			Msg:  "指定的学校不存在",
@@ -45,7 +45,7 @@ func (service UserRegisterService) Register() serializer.Response {
 		Username: service.Username,
 		Password: service.Password,
 		RealName: service.RealName,
-		SchoolID: service.SchoolID,
+		ClassID:  service.ClassID,
 		Type:     service.Type,
 	}
 

@@ -12,4 +12,5 @@ type Class struct {
 	Name     string `json:"name"`
 	SchoolID uint
 	School   School `gorm:"foreighKey:SchoolID"`
+	ExamID   uint
 }
