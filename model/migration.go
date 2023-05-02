@@ -12,5 +12,5 @@ package model
 
 func migration() {
 	// 自动迁移模式
-	_ = DB.AutoMigrate(&User{}, &School{}, &Session{}, &Exam{})
+	_ = DB.AutoMigrate(&User{}, &School{}, &Class{}, &Session{}, &Exam{})
 }

@@ -113,22 +113,21 @@ func (service UserLoginService) Login() serializer.Response {
 }
 
 type UserLogoutService struct {
-	UUID string `json:"uuid" binding:"required,len=36"`
+	TokenRequired
 }
 
 func (service UserLogoutService) Logout() serializer.Response {
-	var count int64
-	var session model.Session
-	if model.DB.Model(&model.Session{}).Where("UUID = ?", service.UUID).Count(&count); count == 0 {
+	if session := service.CheckAuth(); session == nil {
 		return serializer.Response{
-			Code: 40004,
+			Code: 40003,
 			Msg:  "未找到会话",
 		}
-	}
-	model.DB.Where("UUID = ?", service.UUID).First(&session)
-	model.DB.Delete(&session)
-	return serializer.Response{
-		Code: 20000,
-		Msg:  "成功登出",
+	} else {
+		model.DB.Where("UUID = ?", service.UUID).First(&session)
+		model.DB.Delete(&session)
+		return serializer.Response{
+			Code: 20000,
+			Msg:  "成功登出",
+		}
 	}
 }
