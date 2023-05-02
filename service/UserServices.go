@@ -3,8 +3,9 @@ package service
 import (
 	"GoZhixue/model"
 	"GoZhixue/serializer"
-	"github.com/google/uuid"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type UserRegisterService struct {
@@ -57,12 +58,8 @@ func (service UserRegisterService) Register() serializer.Response {
 
 	return serializer.Response{
 		Code: 20001,
-		Data: model.User{
-			Username: user.Username,
-			RealName: user.RealName,
-			School:   user.School,
-		},
-		Msg: "注册成功",
+		Data: user,
+		Msg:  "注册成功",
 	}
 }
 
@@ -89,10 +86,10 @@ func (service UserLoginService) Login() serializer.Response {
 		} else {
 			// 清理过期Session
 			sessions := [...]model.Session{}
-			model.DB.Where("user_id = ?", user.ID).Find(&sessions)
+			model.DB.Where("userid = ?", user.ID).Find(&sessions)
 			delta, _ := time.ParseDuration("289h")
 			for _, session := range sessions {
-				if time.Now().Sub(session.CreatedAt) > delta {
+				if time.Since(session.CreatedAt) > delta {
 					model.DB.Delete(&session)
 				}
 			}
@@ -116,19 +113,19 @@ func (service UserLoginService) Login() serializer.Response {
 }
 
 type UserLogoutService struct {
-	Session string `json:"session" binding:"required,len=36"`
+	UUID string `json:"uuid" binding:"required,len=36"`
 }
 
 func (service UserLogoutService) Logout() serializer.Response {
 	var count int64
 	var session model.Session
-	if model.DB.Model(&model.Session{}).Where("UUID = ?", service.Session).Count(&count); count == 0 {
+	if model.DB.Model(&model.Session{}).Where("UUID = ?", service.UUID).Count(&count); count == 0 {
 		return serializer.Response{
 			Code: 40004,
 			Msg:  "未找到会话",
 		}
 	}
-	model.DB.Where("UUID = ?", service.Session).First(&session)
+	model.DB.Where("UUID = ?", service.UUID).First(&session)
 	model.DB.Delete(&session)
 	return serializer.Response{
 		Code: 20000,

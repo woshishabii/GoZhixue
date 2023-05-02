@@ -15,5 +15,7 @@ type User struct {
 	RealName string `json:"real_name" gorm:"not null"`
 	SchoolID uint
 	School   School `gorm:"foreignKey:SchoolID"`
-	Type     uint   `json:"type"`
+	ClassID  uint
+	Class    Class `gorm:"foreignKey:ClassID"`
+	Type     uint  `json:"type"`
 }
