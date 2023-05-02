@@ -13,9 +13,10 @@ type UserRegisterService struct {
 	Password string `form:"password" json:"password" binding:"required,len=32"`
 	RealName string `form:"real_name" json:"real_name" binding:"required"`
 	ClassID  uint   `form:"class_id" json:"class_id" binding:"required"`
-	Type     uint   `form:"type" json:"type" binding:"required"`
+	// Type     uint   `form:"type" json:"type" binding:"required"`
 }
 
+// Valid 验证注册表单
 func (service *UserRegisterService) Valid() *serializer.Response {
 	var count int64
 	if model.DB.Model(&model.User{}).Where("username = ?", service.Username).Count(&count); count > 0 {
@@ -36,6 +37,7 @@ func (service *UserRegisterService) Valid() *serializer.Response {
 	return nil
 }
 
+// Register 注册
 func (service UserRegisterService) Register() serializer.Response {
 	if err := service.Valid(); err != nil {
 		return *err
@@ -46,7 +48,7 @@ func (service UserRegisterService) Register() serializer.Response {
 		Password: service.Password,
 		RealName: service.RealName,
 		ClassID:  service.ClassID,
-		Type:     service.Type,
+		Type:     model.Student,
 	}
 
 	if err := model.DB.Create(&user).Error; err != nil {
@@ -68,6 +70,7 @@ type UserLoginService struct {
 	Password string `json:"password" binding:"required"`
 }
 
+// Login 登录
 func (service UserLoginService) Login() serializer.Response {
 	var count int64
 	var user model.User
@@ -116,6 +119,7 @@ type UserLogoutService struct {
 	TokenRequired
 }
 
+// Logout 登出 Session
 func (service UserLogoutService) Logout() serializer.Response {
 	if session := service.CheckAuth(); session == nil {
 		return serializer.Response{
