@@ -26,10 +26,10 @@ func (service *UserRegisterService) Valid() *serializer.Response {
 	}
 
 	count = 0
-	if model.DB.Model(&model.School{}).Where("id = ?", service.ClassID).Count(&count); count == 0 {
+	if model.DB.Model(&model.Class{}).Where("id = ?", service.ClassID).Count(&count); count == 0 {
 		return &serializer.Response{
 			Code: 40002,
-			Msg:  "指定的学校不存在",
+			Msg:  "指定的学校/学校不存在",
 		}
 	}
 
